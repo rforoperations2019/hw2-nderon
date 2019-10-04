@@ -19,11 +19,12 @@ blotter_subset <- blotter_subset[sample(1:nrow(blotter_subset), 25),]
 
 #Points Map
 ```{r}
+#getColor and icons adapted from https://rstudio.github.io/leaflet/markers.html
 getColor <- function(data) {
   sapply(data$type, function(type) {
-  if(mag == "Type 1 - Major Crime") {
+  if(type == "Type 1 - Major Crime") {
     "red"
-  } else if(mag == "Type 2 - Minor Crime") {
+  } else if(type == "Type 2 - Minor Crime") {
     "orange"
   } else {
     "grey"
@@ -40,9 +41,7 @@ icons <- awesomeIcons(
 leaflet(blotter_subset) %>%
   addTiles() %>%
   addAwesomeMarkers(lng = blotter_subset$X, lat = blotter_subset$Y, icon = icons) %>%
-  setView(lng = -79.9959, lat = 40.4406, zoom = 12)
-
-leaflet(df.20) %>% addTiles() %>%
-  addAwesomeMarkers(~long, ~lat, icon=icons, label=~as.character(mag))
+  setView(lng = -79.9959, lat = 40.4406, zoom = 12) %>%
+  addLegend(values = blotter_subset$type, colors = c("red", "orange", "grey"), labels = levels(blotter_subset$type))
 ```
 
