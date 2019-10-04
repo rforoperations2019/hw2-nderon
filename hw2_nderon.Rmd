@@ -12,14 +12,37 @@ library(leaflet)
 blotter <- read.csv("Blotter_Data_Archive.csv")
 blotter$INCIDENTTIME <- strptime(x = as.character(blotter$INCIDENTTIME),
                                       format = "%Y-%m-%dT%H:%M:%S")
+blotter$type <- cut(blotter$HIERARCHY, c(-Inf, 9, 98, Inf), labels = c("Type 1 - Major Crime", "Type 2 - Minor Crime", "No Data or None"))
 blotter_subset <- blotter[blotter$INCIDENTTIME >= "2018-01-01" & blotter$INCIDENTTIME <= "2018-12-31",]
 blotter_subset <- blotter_subset[sample(1:nrow(blotter_subset), 25),]
 ```
 
 #Points Map
 ```{r}
+getColor <- function(data) {
+  sapply(data$type, function(type) {
+  if(mag == "Type 1 - Major Crime") {
+    "red"
+  } else if(mag == "Type 2 - Minor Crime") {
+    "orange"
+  } else {
+    "grey"
+  } })
+}
+
+icons <- awesomeIcons(
+  icon = 'ios-close',
+  iconColor = 'black',
+  library = 'ion',
+  markerColor = getColor(blotter_subset)
+)
+
 leaflet(blotter_subset) %>%
   addTiles() %>%
-  addMarkers(lng = blotter_subset$X, lat = blotter_subset$Y)
+  addAwesomeMarkers(lng = blotter_subset$X, lat = blotter_subset$Y, icon = icons) %>%
+  setView(lng = -79.9959, lat = 40.4406, zoom = 12)
+
+leaflet(df.20) %>% addTiles() %>%
+  addAwesomeMarkers(~long, ~lat, icon=icons, label=~as.character(mag))
 ```
 
