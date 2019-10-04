@@ -19,6 +19,7 @@ blotter$type <- cut(blotter$HIERARCHY, c(-Inf, 9, 98, Inf), labels = c("Type 1 -
 blotter_subset <- blotter[blotter$INCIDENTTIME >= "2018-01-01" & blotter$INCIDENTTIME <= "2018-12-31" & blotter$X <= -78 & blotter$Y >= 39 & !is.na(blotter$type),]
 blotter_subset <- blotter_subset[sample(1:nrow(blotter_subset), 25),]
 parks <- readOGR("Allegheny_County_Parks_Outlines.geojson")
+cc_districts <- readOGR("City_Council_Districts.geojson")
 ```
 
 #Points Map
@@ -47,7 +48,8 @@ leaflet() %>%
   addAwesomeMarkers(lng = blotter_subset$X, lat = blotter_subset$Y, icon = icons) %>%
   setView(lng = -79.9959, lat = 40.4406, zoom = 12) %>%
   addLegend(values = blotter_subset$type, colors = c("red", "orange", "grey"), labels = levels(blotter_subset$type)) %>%
-  addPolygons(data = parks, fillColor = "#495D4E", opacity = 1, fillOpacity = 0.5)
+  addPolygons(data = parks, fillColor = "#495D4E", opacity = 1, fillOpacity = 0.5) %>%
+  addPolylines(data = cc_districts, opacity = 1, weight = 1)
 ```
 
 #Lines Map
