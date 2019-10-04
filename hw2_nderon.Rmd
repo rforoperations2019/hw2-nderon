@@ -5,9 +5,21 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
 ```
 
 ```{r}
 blotter <- read.csv("Blotter_Data_Archive.csv")
+blotter$INCIDENTTIME <- strptime(x = as.character(blotter$INCIDENTTIME),
+                                      format = "%Y-%m-%dT%H:%M:%S")
+blotter_subset <- blotter[blotter$INCIDENTTIME >= "2018-01-01" & blotter$INCIDENTTIME <= "2018-12-31",]
+blotter_subset <- blotter_subset[sample(1:nrow(blotter_subset), 25),]
+```
+
+#Points Map
+```{r}
+leaflet(blotter_subset) %>%
+  addTiles() %>%
+  addMarkers(lng = blotter_subset$X, lat = blotter_subset$Y)
 ```
 
