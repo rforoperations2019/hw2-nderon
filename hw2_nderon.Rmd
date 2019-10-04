@@ -13,7 +13,7 @@ blotter <- read.csv("Blotter_Data_Archive.csv")
 blotter$INCIDENTTIME <- strptime(x = as.character(blotter$INCIDENTTIME),
                                       format = "%Y-%m-%dT%H:%M:%S")
 blotter$type <- cut(blotter$HIERARCHY, c(-Inf, 9, 98, Inf), labels = c("Type 1 - Major Crime", "Type 2 - Minor Crime", "No Data or None"))
-blotter_subset <- blotter[blotter$INCIDENTTIME >= "2018-01-01" & blotter$INCIDENTTIME <= "2018-12-31",]
+blotter_subset <- blotter[blotter$INCIDENTTIME >= "2018-01-01" & blotter$INCIDENTTIME <= "2018-12-31" & blotter$X <= -78 & blotter$Y >= 39,]
 blotter_subset <- blotter_subset[sample(1:nrow(blotter_subset), 25),]
 ```
 
