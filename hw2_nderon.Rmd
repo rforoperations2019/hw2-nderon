@@ -18,7 +18,7 @@ blotter$INCIDENTTIME <- strptime(x = as.character(blotter$INCIDENTTIME),
 blotter$type <- cut(blotter$HIERARCHY, c(-Inf, 9, 98, Inf), labels = c("Type 1 - Major Crime", "Type 2 - Minor Crime", "No Data or None"))
 blotter_subset <- blotter[blotter$INCIDENTTIME >= "2018-01-01" & blotter$INCIDENTTIME <= "2018-12-31" & blotter$X <= -78 & blotter$Y >= 39 & !is.na(blotter$type),]
 blotter_subset <- blotter_subset[sample(1:nrow(blotter_subset), 25),]
-parks <- readOGR("Allegheny_County_Parks_Outlines.shp")
+parks <- readOGR("Allegheny_County_Parks_Outlines.geojson")
 ```
 
 #Points Map
@@ -42,12 +42,12 @@ icons <- awesomeIcons(
   markerColor = getColor(blotter_subset)
 )
 
-leaflet(parks) %>%
+leaflet() %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   addAwesomeMarkers(lng = blotter_subset$X, lat = blotter_subset$Y, icon = icons) %>%
   setView(lng = -79.9959, lat = 40.4406, zoom = 12) %>%
   addLegend(values = blotter_subset$type, colors = c("red", "orange", "grey"), labels = levels(blotter_subset$type)) %>%
-  addPolygons(fillColor = "green", opacity = 1, fillOpacity = 0.5)
+  addPolygons(data = parks, fillColor = "#495D4E", opacity = 1, fillOpacity = 0.5)
 ```
 
 #Lines Map
